@@ -1,7 +1,10 @@
 const express = require('express');
 const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
+const jwt=require('jsonwebtoken');
+const cookieParser=require('cookie-parser');
 
+const privateKey="egfdfgvsbkbziudviccujujqcfqcv";
 // Insérer un utilisateur
 const addUser = async (req, res) => {
     try {
@@ -10,7 +13,8 @@ const addUser = async (req, res) => {
 
         // Hacher le mot de passe
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
+        
+        
         // Créer un nouvel utilisateur avec le mot de passe haché
         const user = new User({
             nom: req.body.nom,
@@ -35,29 +39,39 @@ const addUser = async (req, res) => {
 const loginUser = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+
     try {
         const userDoc = await User.findOne({ email });
-
         if (!userDoc) {
-            return res.status(404).send("Utilisateur non trouvé");
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
-
-        // Comparer le mot de passe fourni avec le mot de passe haché stocké dans la base de données
-        const passwordMatch = bcrypt.compare(password, userDoc.password);
-
+       
+        const passwordMatch = await bcrypt.compare(password, userDoc.password);
+    
         if (passwordMatch) {
-            res.status(200).send("Connexion réussie");
+            //logged in
+            jwt.sign({userId:userDoc.id}, privateKey, {}, (err, token)=>{
+                if (err) throw err;
+                res.cookie('token',token).json('ok')
+              });
+            // return res.status(200).json({ message: "Connexion réussie" });
         } else {
-            res.status(401).send("Mot de passe incorrect");
+            return res.status(401).json({ message: "Mot de passe incorrect" });
         }
-    } catch (error) {
-        console.error('Error logging in:', error);
-        res.status(500).send('Erreur lors de la connexion');
-    }
-}
 
+    } catch (error) {
+        console.error("Une erreur s'est produite", error);
+        res.status(500).json({ message: "Erreur de serveur" });
+    }
+};
+
+const userSection= (req, res) => {
+    const {tokken}=req.cookies
+    res.json(req.cookie);
+}
 
 module.exports = {
     addUser,
-    loginUser
+    loginUser,
+    userSection
 };

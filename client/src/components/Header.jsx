@@ -1,8 +1,17 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 
 import { Link } from 'react-router-dom';
 
 function Header() {
+    useEffect(()=>{
+         fetch('http://localhost:1208/profile', {
+            method:'GET',
+            headers: {
+                credentials:"include", 
+            }
+           
+        })
+    },[])
     return (  
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">

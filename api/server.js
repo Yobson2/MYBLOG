@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
+const cookieParser=require('cookie-parser');
 const PORT = 1208;
 const connectDB = require('./database/config');
 const routes = require('./routes/userRouter');
@@ -19,6 +20,7 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 }));
+app.use(cookieParser());
 
 // Test route
 app.get('/', (req, res) => {
@@ -32,3 +34,7 @@ app.use('/', routes);
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost/:${PORT}`);
 });
+
+
+
+//je me suis arreté au niveau de la route /profile

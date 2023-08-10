@@ -12,7 +12,7 @@ function Login() {
         password: ""
       });
       const { email, password} = formLogin;
-      const [redirectWithId, setRedirectWithId] = useState("");
+      const [redirect, setRedirect] = useState(false);
       const handleChange = (e) => {
         setFormLogin({
           ...formLogin,
@@ -27,10 +27,18 @@ function Login() {
                 headers: {
                     'Content-Type': 'application/json',
                      Accept:"application/json",
-                    "Access-Control-Allow-Origin":"*"
+                    "Access-Control-Allow-Origin":"*",
+                    credentials:"include",  //pour inclure la valeur du cookie
                 }
             })
-            console.log('tete',formLogin)
+            if(response.ok){
+              setRedirect(true);
+            }else{
+              alert('bad data')
+            }
+            if(redirect){
+              return navigation('/')
+            }
         }
         
      
