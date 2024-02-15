@@ -21,24 +21,22 @@ function Login() {
       };
         const handleLogin= async(e)=>{
             e.preventDefault();
-            const response= await fetch('http://localhost:1208/login', {
+            const response= await fetch('http://localhost:3030/v1/login', {
                 method: 'POST',
                 body: JSON.stringify(formLogin),
                 headers: {
                     'Content-Type': 'application/json',
                      Accept:"application/json",
                     "Access-Control-Allow-Origin":"*",
-                    credentials:"include",  //pour inclure la valeur du cookie
                 }
             })
-            if(response.ok){
-              setRedirect(true);
+            if(response.status===200){
+              alert('success')
+              navigation('/');
             }else{
               alert('bad data')
             }
-            if(redirect){
-              return navigation('/')
-            }
+           
         }
         
      

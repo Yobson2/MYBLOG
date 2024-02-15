@@ -2,7 +2,7 @@ const express = require('express');
 const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
 const jwt=require('jsonwebtoken');
-const cookieParser=require('cookie-parser');
+
 
 const privateKey="egfdfgvsbkbziudviccujujqcfqcv";
 // Insérer un utilisateur
@@ -52,9 +52,8 @@ const loginUser = async (req, res) => {
             //logged in
             jwt.sign({userId:userDoc.id}, privateKey, {}, (err, token)=>{
                 if (err) throw err;
-                res.cookie('token',token).json('ok')
+                 return res.cookie('token',token).json('ok')
               });
-            // return res.status(200).json({ message: "Connexion réussie" });
         } else {
             return res.status(401).json({ message: "Mot de passe incorrect" });
         }
@@ -66,8 +65,9 @@ const loginUser = async (req, res) => {
 };
 
 const userSection= (req, res) => {
-    const {tokken}=req.cookies
-    res.json(req.cookie);
+    const {token}=req.cookies
+    console.log('token', token);
+    res.json(token)
 }
 
 module.exports = {

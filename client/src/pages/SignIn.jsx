@@ -13,7 +13,8 @@ function SignIn() {
         image: null,
     });
 
-    const { nom, email, password, image } = formValues;
+   
+    const { nom, email, password,image} = formValues;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,7 +39,7 @@ function SignIn() {
 
     const handleSign = async (e) => {
         e.preventDefault();
-        const response=await fetch('http://localhost:1208/register', {
+        const response=await fetch('http://localhost:3030/v1/register', {
             method: 'POST',
             body: JSON.stringify(formValues),
             headers: {
