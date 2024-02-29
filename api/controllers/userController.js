@@ -50,9 +50,19 @@ const loginUser = async (req, res) => {
     
         if (passwordMatch) {
             //logged in
-            jwt.sign({userId:userDoc.id}, privateKey, {}, (err, token)=>{
+            jwt.sign({userId:userDoc.id}, privateKey, {}, async (err, token)=>{
                 if (err) throw err;
-                 return res.cookie('token',token).json('ok')
+                 // Update token in database
+                 userDoc.token = token;
+                 await userDoc.save();
+
+                return res.json(
+                    {
+                        'Status' : true,
+                        'acess_token' : token
+                    }
+                    
+                    );
               });
         } else {
             return res.status(401).json({ message: "Mot de passe incorrect" });
@@ -64,11 +74,26 @@ const loginUser = async (req, res) => {
     }
 };
 
-const userSection= (req, res) => {
-    const {token}=req.cookies
-    console.log('token', token);
-    res.json(token)
+const userSection = async (req, res) => {
+    try {
+        const token=req.params.token;
+        // Recherche de l'utilisateur par token
+        const user = await User.findOne({ token });
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+         return res.json({ 
+            _id: user._id,
+            nom: user.nom,
+            email: user.email,
+            image: user.image,
+        });
+    } catch (error) {
+        console.error("Une erreur s'est produite", error);
+        return res.status(500).json({ message: "Erreur de serveur" });
+    }
 }
+
 
 module.exports = {
     addUser,

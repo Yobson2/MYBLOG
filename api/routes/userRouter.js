@@ -13,6 +13,6 @@ router.post('/register',userControllers.addUser)
 router.post('/login',userControllers.loginUser)
 
 //profile du user
-router.get('/profile',userControllers.userSection)
+router.get('/profile/:token',userControllers.userSection)
 
 module.exports=router

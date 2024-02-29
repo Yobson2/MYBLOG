@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
+    withCredentials: true
 }));
 
 app.use(cookieParser());
@@ -27,11 +28,7 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
     res.send("Bienvenue sur notre serveur ! 🎉");
 });
-app.get('/set-cookie', (req, res) => {
-    // Définition d'un cookie nommé 'mon_cookie' avec une valeur 'valeur_du_cookie'
-    res.cookie('mon_cookie', 'valeur_du_cookie', { maxAge: 900000, httpOnly: true });
-    res.send('Cookie défini avec succès !');
-  });
+
 
 // Route prefix
 app.use('/v1/', routes);
