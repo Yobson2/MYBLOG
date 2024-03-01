@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 
 function Footer() {
-    
+    const userContext = useContext(UserContext);
     return (
         <footer className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left">
             <div className="p-4 text-center text-neutral-700 dark:text-neutral-200">
@@ -13,7 +14,7 @@ function Footer() {
                     Tailwind Elements
                 </a>
             </div>
-            
+          
         </footer>
     );
 }

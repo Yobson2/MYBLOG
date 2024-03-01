@@ -1,10 +1,12 @@
-import { useEffect,useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 import "../styles/blog.css"
 import { accountServices } from '../services/account.service';
 
-function Blog({ userData }) {
+function Blog() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    const userContext = useContext(UserContext);
+    
     useEffect(() => {
         setIsLoggedIn(accountServices.islogged());
     },[isLoggedIn])
@@ -13,10 +15,10 @@ function Blog({ userData }) {
     return (
         <section className="bg-white dark:bg-gray-900 blog-section">
            
-           {isLoggedIn && userData && (
+           {isLoggedIn && userContext.userInfo && (
                 <div className="bg-blue-500 text-white p-4">
-                    <p>Nom: {userData.nom}</p>
-                    <p>Email: {userData.email}</p>
+                    <p>Nom: {userContext.userInfo.nom}</p>
+                    <p>Email: {userContext.userInfo.email}</p>
                 </div>
             )}
             <div className="container px-6 py-10 mx-auto">

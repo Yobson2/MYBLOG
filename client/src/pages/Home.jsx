@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Blog from '../components/Blog';
 import { accountServices } from '../services/account.service';
+import { UserContext } from '../context/UserContext';
 
 function Home() {
-    const [userData, setUserData] = useState(null);
+    const {setUserInfo, userInfo} =useContext(UserContext); 
 
     useEffect(() => {
         fetchData();
@@ -23,9 +24,9 @@ function Home() {
 
             if (response.status === 200) {
                 const data = await response.json();
-                setUserData(data);
+                setUserInfo(data);
             } else {
-                setUserData(null);
+                setUserInfo(null);
             }
         } catch (error) {
             console.error('Erreur lors de la récupération des données:', error);
@@ -40,7 +41,7 @@ function Home() {
     return (
         <div className="app_home">
             <Header onLogout={handleLogout} />
-            {userData ? <Blog userData={userData} /> : <Blog />}
+            <Blog />
             <Footer />
         </div>
     );
