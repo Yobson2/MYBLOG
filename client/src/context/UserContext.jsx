@@ -12,6 +12,6 @@ const UserProvider = ({ children }) => {
   );
 };
 
-const useUser = () => useContext(UserContext);
+const useUser = () => useContext(UserContext); 
 
-export { UserProvider, useUser };
+export { UserProvider, useUser }; 

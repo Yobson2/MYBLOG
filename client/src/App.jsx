@@ -10,13 +10,15 @@ import SignIn from './pages/SignIn';
 
 function App() {
   return (
-    <div className='body-app'>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/sign" element={<SignIn />} />
-    </Routes>
- </div>
+  
+      <div className='body-app'>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign" element={<SignIn />} />
+      </Routes> 
+  </div>
+ 
   )
 }
 

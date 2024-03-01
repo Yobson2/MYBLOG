@@ -1,37 +1,48 @@
-import React, { useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Blog from '../components/Blog';
 import { accountServices } from '../services/account.service';
 
 function Home() {
+    const [userData, setUserData] = useState(null);
 
-    const initialData= async ()=> {
-        const response= await fetch(`http://localhost:3030/v1/profile/${accountServices.getToken()}`,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                 Accept:"application/json",
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`http://localhost:3030/v1/profile/${accountServices.getToken()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                setUserData(data);
+            } else {
+                setUserData(null);
             }
-        })
-        if(response.status===200){
-            const data = await response.json();
-            console.log('data',data);           
-          }
-    }
-     
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données:', error);
+        }
+    };
 
-    useEffect( () =>  {
-         initialData()        
-    },[]);
-    return (  
+    // Actualiser les données après déconnexion
+    const handleLogout = () => {
+        fetchData(); 
+    };
+
+    return (
         <div className="app_home">
-            <Header />
-            <Blog />
+            <Header onLogout={handleLogout} />
+            {userData ? <Blog userData={userData} /> : <Blog />}
             <Footer />
         </div>
-           
     );
 }
 

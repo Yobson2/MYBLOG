@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { accountServices } from '../services/account.service';
 
-function Header() {
+function Header({ onLogout }) {
     const [isLoggedIn, setIsLoggedIn] = useState(accountServices.islogged());
 
     const handleLogout = () => {
         accountServices.lagout();
+        onLogout();
         setIsLoggedIn(false);
     };
 
     return (  
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+
             <div className="container">
                 <a href="/" className="navbar-brand"><i className="fas fa-code me-2"></i>YoyoBlog</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#my-nav" aria-controls="my-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,6 +21,7 @@ function Header() {
                 </button>
                 <div id="my-nav" className="collapse navbar-collapse">
                     {isLoggedIn ? (
+                            
                             <ul>
                                  <li className="nav-item">
                                    <Link to="sign" className="nav-link"><i className="fas fa-user-plus me-1"></i>Create poste</Link>
