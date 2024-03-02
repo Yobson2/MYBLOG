@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { accountServices } from '../services/account.service';
-
+import {  UserContext } from '../context/UserContext';
 function Header({ onLogout }) {
     const [isLoggedIn, setIsLoggedIn] = useState(accountServices.islogged());
+    const userContext = useContext(UserContext);
 
     const handleLogout = () => {
         accountServices.lagout();
@@ -24,7 +25,8 @@ function Header({ onLogout }) {
                             
                             <ul>
                                  <li className="nav-item">
-                                   <Link to="sign" className="nav-link"><i className="fas fa-user-plus me-1"></i>Create poste</Link>
+                               
+                                   <Link to={`/Blog/${userContext.userInfo._id}/create`} className="nav-link"><i className="fas fa-user-plus me-1"></i>Create poste</Link>
                                 </li>
                                  <li className="nav-item">
                                     <button className="nav-link text-blue-500" onClick={handleLogout}><i className="fas fa-sign-out-alt me-1"></i>Déconnexion</button>

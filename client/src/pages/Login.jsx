@@ -4,6 +4,7 @@ import { accountServices } from '../services/account.service';
 import { Navigate } from 'react-router-dom';
 
 
+
 import "../styles/login.css"
 import logo from "../assets/logo/Yoyoblog.png"
 function Login() {
@@ -39,7 +40,7 @@ function Login() {
               const data = await response.json();
               accountServices.saveToken(data.acess_token)
               // setToken(data.acess_token);
-              navigation('/');            
+              navigation(`/`);            
             }else{
               alert('bad data')
             }
