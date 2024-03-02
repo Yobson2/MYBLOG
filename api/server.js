@@ -6,6 +6,7 @@ const cookieParser=require('cookie-parser');
 const PORT = 3030;
 const connectDB = require('./database/config');
 const routes = require('./routes/userRouter');
+const routesPosts = require('./routes/postRouter');
 
 // Connect database
  connectDB();
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
 
 // Route prefix
 app.use('/v1/', routes);
-
+app.use('/v1/', routesPosts);
 // Listen on port
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);

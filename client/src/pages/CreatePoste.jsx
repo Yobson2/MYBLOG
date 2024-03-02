@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 function CreatePoste() {
     const [title, setTitle] = useState('');
-    const [summary, setSummary] = useState('');
     const [content, setContent] = useState('');
+    const [files, setFiles] = useState('');
 
-   
   const modules= {
         toolbar: [
         [{ header: [1, 2, false] }],
@@ -24,14 +24,33 @@ function CreatePoste() {
         'ordered', 'bullet',
         'image', 'code-block', 'link'
     ]
-    
 
-    const handleSubmit = (e) => {
+    const userContext = useContext(UserContext);
+    console.log('user',userContext.userInfo._id)
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
        
-        console.log('Titre:', title);
-        console.log('Résumé:', summary);
-        console.log('Contenu:', content);
+        const response=await fetch(`http://localhost:3030/v1/create_post/${userContext.userInfo._id}`, {
+            method: 'POST',
+             body: formData,
+            headers: {
+                'Content-Type': 'application/json',
+                 Accept:"application/json",
+                "Access-Control-Allow-Origin":"*"
+            }
+        })
+    //    if(response.status===200){
+    //      alert('Enregistrement reussi')
+    //    }else{
+    //     alert('Enregistrement reussi')
+    //    }
+        // resetForm();
+
+        console.log('Enregistrement',formData)
     };
 
     return (  
@@ -50,23 +69,13 @@ function CreatePoste() {
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="summary" className="block text-gray-700 font-bold mb-2">Résumé</label>
-                    <input
-                        id="summary"
-                        type="text"
-                        placeholder="Résumé du poste"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={summary}
-                        onChange={e=>setSummary(e.target.value)}
-                    />
-                </div>
-                <div className="mb-4">
                     <label htmlFor="file" className="block text-gray-700 font-bold mb-2">Fichier</label>
                     <input
                         id="file"
                         type="file"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         
+                         onChange={e=>setFiles(e.target.files)}
                     />
                 </div>
                 <div className="mb-4">
