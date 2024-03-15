@@ -101,13 +101,12 @@ function CreatePoste() {
                 </div>
                 <div className="mb-4">
                     <label htmlFor="content" className="block text-gray-700 font-bold mb-2">Contenu</label>
-                    <ReactQuill
+                    <textarea
                         id="content"
-                        theme="snow"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name="content"
                         value={content}
-                        modules={modules}
-                        formats={formats}
-                        onChange={handleContentChange}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="flex justify-end">
