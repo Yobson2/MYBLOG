@@ -1,61 +1,81 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../context/UserContext';
+import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 function CreatePoste() {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [files, setFiles] = useState('');
+    const userId = window.location.href.split('/').splice(4, 1)[0];
+    const [formValues, setFormValues] = useState({
+        title: "",
+        content: "",
+        files: null,
+    });
 
-  const modules= {
+    const { title, content } = formValues;
+
+    const modules = {
         toolbar: [
-        [{ header: [1, 2, false] }],
-        ['bold', 'italic', 'underline','strike'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['image', 'link', 'code-block'],
-        ['clean'],
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['image', 'link', 'code-block'],
+            ['clean'],
         ],
-    }
+    };
 
-    const formats=[
-       'header' ,'bold',
-        'italic', 'underline','strike',
+    const formats = [
+        'header', 'bold',
+        'italic', 'underline', 'strike',
         'ordered', 'bullet',
         'image', 'code-block', 'link'
-    ]
+    ];
 
-    const userContext = useContext(UserContext);
-    console.log('user',userContext.userInfo._id)
+    console.log('user', userId);
+
+    const handleChange = (e) => {
+        if (e.target.type === 'file') {
+            setFormValues({
+                ...formValues,
+                files: e.target.files[0]
+            });
+        } else {
+            setFormValues({
+                ...formValues,
+                [e.target.name]: e.target.value
+            });
+        }
+    }
+
+    const handleContentChange = (content) => {
+        setFormValues({
+            ...formValues,
+            content: content
+        });
+
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', content);
-       
-        const response=await fetch(`http://localhost:3030/v1/create_post/${userContext.userInfo._id}`, {
+        // console.log('Enregistrement', formValues);
+        const response=await fetch(`http://localhost:3030/v1/create_post/${userId}`, {
             method: 'POST',
-             body: formData,
+            body: JSON.stringify(formValues),
             headers: {
                 'Content-Type': 'application/json',
                  Accept:"application/json",
                 "Access-Control-Allow-Origin":"*"
             }
         })
-    //    if(response.status===200){
-    //      alert('Enregistrement reussi')
-    //    }else{
-    //     alert('Enregistrement reussi')
-    //    }
-        // resetForm();
+       if(response.status===200){
+         alert('Enregistrement reussi')
+       }else{
+        alert('noooooo')
+       }
 
-        console.log('Enregistrement',formData)
     };
 
-    return (  
+    return (
         <div className="flex items-center justify-center h-screen">
-            <form className="w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
+            <form className="w-full max-w-lg bg-white rounded-lg shadow-lg p-8" onSubmit={handleSubmit}>
                 <h1 className="text-2xl mb-4">Créer un poste</h1>
                 <div className="mb-4">
                     <label htmlFor="title" className="block text-gray-700 font-bold mb-2">Titre</label>
@@ -64,8 +84,9 @@ function CreatePoste() {
                         type="text"
                         placeholder="Titre du poste"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name="title"
                         value={title}
-                        onChange={e=>setTitle(e.target.value)}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="mb-4">
@@ -74,8 +95,8 @@ function CreatePoste() {
                         id="file"
                         type="file"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        
-                         onChange={e=>setFiles(e.target.files)}
+                        name="file"
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="mb-4">
@@ -86,14 +107,13 @@ function CreatePoste() {
                         value={content}
                         modules={modules}
                         formats={formats}
-                        onChange={e=>setContent(e)}
+                        onChange={handleContentChange}
                     />
                 </div>
                 <div className="flex justify-end">
                     <button
                         type="submit"
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        onClick={handleSubmit}
                     >
                         Créer poste
                     </button>
