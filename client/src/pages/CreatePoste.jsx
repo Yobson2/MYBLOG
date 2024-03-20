@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import handleFileInput from '../services/image_services'
+import {handleFileInput} from '../services/image_services';
 
 function CreatePoste() {
     const userId = window.location.href.split('/').splice(4, 1)[0];
@@ -12,30 +12,23 @@ function CreatePoste() {
 
     const { title, content } = formValues;
 
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['image', 'link', 'code-block'],
-            ['clean'],
-        ],
+   
+
+    const resetForm = () => {
+        setFormValues({
+            title: "",
+            content: "",
+            files: null,
+        });
     };
-
-    const formats = [
-        'header', 'bold',
-        'italic', 'underline', 'strike',
-        'ordered', 'bullet',
-        'image', 'code-block', 'link'
-    ];
-
-    console.log('user', userId);
-
     const handleChange = (e) => {
+        e.preventDefault();
         if (e.target.type === 'file') {
-            setFormValues({
-                ...formValues,
-                files: e.target.files[0]
+            handleFileInput(e.target.files[0], (base64Image) => {
+                setFormValues({
+                    ...formValues,
+                    files: base64Image
+                });
             });
         } else {
             setFormValues({
@@ -45,17 +38,8 @@ function CreatePoste() {
         }
     }
 
-    const handleContentChange = (content) => {
-        setFormValues({
-            ...formValues,
-            content: content
-        });
-
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log('Enregistrement', formValues);
         const response=await fetch(`http://localhost:3030/v1/create_post/${userId}`, {
             method: 'POST',
             body: JSON.stringify(formValues),
@@ -70,7 +54,7 @@ function CreatePoste() {
        }else{
         alert('noooooo')
        }
-
+       resetForm();
     };
 
     return (

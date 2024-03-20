@@ -4,18 +4,20 @@ import { UserContext } from '../context/UserContext';
 function Footer() {
     const userContext = useContext(UserContext);
     return (
-        <footer className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left">
-            <div className="p-4 text-center text-neutral-700 dark:text-neutral-200">
-                © 2023 Copyright:
-                <a
-                    className="text-neutral-800 dark:text-neutral-400"
-                    href="https://tailwind-elements.com/"
-                >
-                    Tailwind Elements
-                </a>
-            </div>
-          
-        </footer>
+        <footer className="bg-gray-200 dark:bg-gray-800 text-center lg:text-left">
+        <div className="container mx-auto py-4 lg:px-8 text-gray-700 dark:text-gray-300">
+          <p className="text-sm">
+            © 2024 Tout Droit Réservé: 
+            <a
+              className="text-blue-600 dark:text-blue-400 ml-2 hover:underline"
+              href="#"
+            >
+              YoyoBlog
+            </a>
+          </p>
+        </div>
+      </footer>
+      
     );
 }
 

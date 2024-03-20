@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from "../assets/logo/Yoyoblog.png";
 
 import "../styles/signIn.css";
+import {handleFileInput} from '../services/image_services';
 
 function SignIn() {
     const navigation = useNavigate();
@@ -15,14 +16,6 @@ function SignIn() {
 
    
     const { nom, email, password,image} = formValues;
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({
-            ...formValues,
-            [name]: value,
-        });
-    };
 
     const resetForm = () => {
         setFormValues({
@@ -39,6 +32,7 @@ function SignIn() {
 
     const handleSign = async (e) => {
         e.preventDefault();
+
         const response=await fetch('http://localhost:3030/v1/register', {
             method: 'POST',
             body: JSON.stringify(formValues),
@@ -56,25 +50,23 @@ function SignIn() {
         resetForm();
     };
 
-    const baseImage = (e) => {
+
+    const handleChange = (e) => {
         e.preventDefault();
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.addEventListener('load', () => {
+        if (e.target.type === 'file') {
+            handleFileInput(e.target.files[0], (base64Image) => {
                 setFormValues({
                     ...formValues,
-                    image: reader.result,
+                    image: base64Image
                 });
             });
-            reader.readAsDataURL(file);
         } else {
             setFormValues({
                 ...formValues,
-                image: null,
+                [e.target.name]: e.target.value
             });
         }
-    };
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -98,7 +90,7 @@ function SignIn() {
                     </div>
                     <div className="mb-6">
                         <label className="block mb-2 text-sm text-gray-600">Photo</label>
-                        <input type="file" id="image" name="image" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required onChange={baseImage} />
+                        <input type="file" id="image" name="image" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required onChange={handleChange} />
                     </div>
                     <button type="submit" className="w-32 from-cyan-400 to-cyan-600 text-white py-2 rounded-lg mx-auto block focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 mt-4 mb-6 btn-sign">Envoyer</button>
                 </form>

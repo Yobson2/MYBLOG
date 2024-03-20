@@ -12,7 +12,9 @@ router.post('/register',userControllers.addUser)
 //connect user
 router.post('/login',userControllers.loginUser)
 
-//profile du user
+//
 router.get('/profile/:token',userControllers.userSection)
+router.get('/users',userControllers.getAllUser)
+router.get('/users/:id',userControllers.getUserById)
 
 module.exports=router

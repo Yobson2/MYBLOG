@@ -94,9 +94,27 @@ const userSection = async (req, res) => {
     }
 }
 
+const getUserById = async (req, res) => {};
+const getAllUser = async (req, res) => {
+    try {
+      const allUsers = await User.find({});
+      res.status(200).json({
+        success: true,
+        data: allUsers
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Une erreur est survenue lors de la récupération des utilisateurs."
+      });
+    }
+  };
+  
 
 module.exports = {
     addUser,
     loginUser,
-    userSection
+    userSection,
+    getUserById,
+    getAllUser
 };
