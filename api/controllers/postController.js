@@ -31,18 +31,49 @@ const getPosts = async (req, res) => {
     const tabFinal=[];
      const allUsers = await axios.get('http://localhost:3030/v1/users');
      const allPosts = await Post.find({});
+ 
+    allUsers.data.data.forEach(user => {
+        allPosts.forEach(post => {
+            if (user._id === post.authorId.toString()) {
+                tabFinal.push({
+                     id_user: user._id, 
+                     nom: user.nom,
+                     image:user.image,
+                     email: user.email,
+                      post:{
+                        id_post:post._id.toString(),
+                        title:post.title,
+                        content:post.content,
+                        image:post.image,
+                        date:post.created,
+                        heure: verifierNombreDeuxChiffres(post.created.getHours()) + " : " + verifierNombreDeuxChiffres(post.created.getMinutes()),
+                        date:post.created.toISOString().slice(0, 10)
+                      }
+                    });
+               }
+        });
+    });
+    function verifierNombreDeuxChiffres(nombre) {
+        let nombreString = nombre.toString();
+        if (nombreString.length === 1) {
+            nombreString = '0' + nombreString;
+        }
+        return nombreString;
+    }
+    
+
+    try {
+        res.status(200).json({
+          success: true,
+          data: tabFinal
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Une erreur est survenue lors de la récupération des postes."
+        });
+      }
      
-     console.log('allUsers', allUsers.data.data);
-    //  console.log('allPosts', allPosts);
-    // let data=allUsers.data.data
-
-    // console.log('data', data);
-    // data.forEach(user => {
-    //     console.log('user',user);
-    // });
-
-
-
 };
 
 
